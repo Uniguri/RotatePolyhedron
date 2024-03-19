@@ -10,8 +10,9 @@
 
 namespace lotate_polyhedron {
 
-template <typename FloatType>
+template <typename __FloatType>
 struct Line {
+  using FloatType = __FloatType;
   using DotType = Dot<FloatType>;
 
   DotType dot1_, dot2_;
@@ -37,8 +38,12 @@ struct Line {
       : dot1_(DotType(x0, y0, z0)), dot2_(DotType(x1, y1, z1)) {}
   constexpr explicit Line(const DotType& dot1, const DotType& dot2)
       : dot1_(dot1), dot2_(dot2) {}
+  constexpr explicit Line(DotType&& dot1, DotType&& dot2)
+      : dot1_(std::move(dot1)), dot2_(std::move(dot2)) {}
 
   constexpr Line(const Line& line) : dot1_(line.dot1_), dot2_(line.dot2_) {}
+  constexpr Line(Line&& line)
+      : dot1_(std::move(line.dot1_)), dot2_(std::move(line.dot2_)) {}
 
   template <typename T>
   constexpr inline Line LotateAroundXAxisSelf(const T& angle) {

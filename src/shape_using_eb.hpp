@@ -11,10 +11,11 @@
 
 namespace lotate_polyhedron {
 
-template <typename FloatType>
+template <typename __FloatType>
 class BELineIterator
-    : public LineIterator<FloatType, BELineIterator<FloatType>> {
+    : public LineIterator<__FloatType, BELineIterator<__FloatType>> {
  private:
+  using FloatType = __FloatType;
   using DotType = Dot<FloatType>;
   using VertexVectorType = std::vector<DotType>;
   using LineType = Line<FloatType>;
@@ -36,33 +37,33 @@ class BELineIterator
         vertices_(li.vertices_),
         line_elements_(li.line_elements_) {}
 
-  BELineIterator& operator++(void) override {
+  inline BELineIterator& operator++(void) override {
     ++line_idx_;
     return *this;
   }
 
-  BELineIterator operator++(int junk) override {
+  inline BELineIterator operator++(int junk) override {
     BELineIterator temp(*this);
     ++(*this);
     return temp;
   }
 
-  bool operator==(const BELineIterator& li) const override {
+  inline bool operator==(const BELineIterator& li) const override {
     return (line_idx_ == li.line_idx_) && (&vertices_ == &li.vertices_) &&
            (&line_elements_ == &li.line_elements_);
   }
 
-  bool operator!=(const BELineIterator& li) const override {
+  inline bool operator!=(const BELineIterator& li) const override {
     return !(*this == li);
   }
 
-  LineType operator*(void) const override {
+  inline LineType operator*(void) const override {
     const auto& line_indices = line_elements_[line_idx_];
     return LineType(vertices_[line_indices.first],
                     vertices_[line_indices.second]);
   }
 
-  std::unique_ptr<LineType> operator->(void) const override {
+  inline std::unique_ptr<LineType> operator->(void) const override {
     const auto& line_indices = line_elements_[line_idx_];
     return std::make_unique<LineType>(vertices_[line_indices.first],
                                       vertices_[line_indices.second]);
@@ -74,10 +75,11 @@ class BELineIterator
   const LineIndicatorVectorType& line_elements_;
 };
 
-template <typename FloatType>
+template <typename __FloatType>
 class ElementBufferLineShape
-    : public Shape<FloatType, BELineIterator<FloatType>> {
+    : public Shape<__FloatType, BELineIterator<__FloatType>> {
  private:
+  using FloatType = __FloatType;
   using DotType = Dot<FloatType>;
   using VertexVectorType = std::vector<DotType>;
   using LineType = Line<FloatType>;
@@ -91,25 +93,36 @@ class ElementBufferLineShape
 
   explicit ElementBufferLineShape(
       const std::vector<DotType>& vertices,
-      const std::vector<std::pair<size_t, size_t>> line_elements)
-      : Shape<FloatType, BELineIterator<FloatType>>(vertices.size(),
-                                                    line_elements.size()),
-        vertices_(vertices),
-        line_elements_(line_elements) {}
+      const std::vector<std::pair<size_t, size_t>>& line_elements)
+      : vertices_(vertices), line_elements_(line_elements) {}
+
+  explicit ElementBufferLineShape(
+      std::vector<DotType>&& vertices,
+      std::vector<std::pair<size_t, size_t>>&& line_elements)
+      : vertices_(std::move(vertices)),
+        line_elements_(std::move(line_elements)) {}
 
   explicit ElementBufferLineShape(const ElementBufferLineShape& ebs)
-      : Shape<FloatType, BELineIterator<FloatType>>(ebs),
-        vertices_(ebs.vertices_),
-        line_elements_(ebs.line_elements_) {}
+      : vertices_(ebs.vertices_), line_elements_(ebs.line_elements_) {}
+
+  explicit ElementBufferLineShape(ElementBufferLineShape&& ebs)
+      : vertices_(std::move(ebs.vertices_)),
+        line_elements_(std::move(ebs.line_elements_)) {}
 
  public:
-  BELineIterator<FloatType> begin(void) const override {
+  inline BELineIterator<FloatType> begin(void) const override {
     return BELineIterator<FloatType>(0, vertices_, line_elements_);
   }
 
-  BELineIterator<FloatType> end(void) const override {
+  inline BELineIterator<FloatType> end(void) const override {
     return BELineIterator<FloatType>(line_elements_.size(), vertices_,
                                      line_elements_);
+  }
+
+  virtual inline size_t GetDotCount(void) const { return vertices_.size(); }
+
+  virtual inline size_t GetLineCount(void) const {
+    return line_elements_.size();
   }
 
   void LotateAroundXAxis(const FloatType& angle) override {

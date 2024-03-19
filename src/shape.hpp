@@ -36,30 +36,22 @@ class Shape {
   using DotType = Dot<FloatType>;
   using LineType = Line<FloatType>;
 
- public:
-  explicit Shape(void) = delete;
-
  protected:
-  explicit Shape(size_t dot_count, size_t line_count)
-      : dot_count_(dot_count), line_count_(line_count) {}
+  explicit Shape() {}
 
-  Shape(const Shape& shape)
-      : dot_count_(shape.dot_count_), line_count_(shape.line_count_) {}
+  Shape(const Shape& shape) {}
+  Shape(Shape&& shape) {}
 
  public:
   virtual IteratorType begin(void) const = 0;
   virtual IteratorType end(void) const = 0;
 
-  inline size_t GetDotCount(void) const { return dot_count_; }
-  inline size_t GetLineCount(void) const { return line_count_; }
+  virtual inline size_t GetDotCount(void) const = 0;
+  virtual inline size_t GetLineCount(void) const = 0;
 
   virtual void LotateAroundXAxis(const FloatType& angle) = 0;
   virtual void LotateAroundYAxis(const FloatType& angle) = 0;
   virtual void LotateAroundZAxis(const FloatType& angle) = 0;
-
- protected:
-  const size_t dot_count_;
-  const size_t line_count_;
 };
 
 }  // namespace lotate_polyhedron

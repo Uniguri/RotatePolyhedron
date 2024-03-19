@@ -42,6 +42,7 @@ class FixedPoint {
       : value_(static_cast<int64_t>(value * kConversionFactor)) {}
 
   constexpr FixedPoint(const FixedPoint& fp) : value_(fp.value_) {}
+  constexpr FixedPoint(FixedPoint&& fp) : value_(fp.value_) {}
 
   inline static FixedPoint FromString(const std::string& s) {
     std::stringstream ss(s);

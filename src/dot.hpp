@@ -26,6 +26,8 @@ struct Dot {
       : x(x), y(y), z(z) {}
 
   constexpr Dot(const Dot& dot) : x(dot.x), y(dot.y), z(dot.z) {}
+  constexpr Dot(Dot&& dot)
+      : x(std::move(dot.x)), y(std::move(dot.y)), z(std::move(dot.z)) {}
 
   constexpr inline Dot round(void) const {
     return Dot(round(x), round(y), round(z));
