@@ -87,8 +87,12 @@ class ConsoleBuffer {
   void PrintAt(size_t x, size_t y, const std::wstring_view& s);
 
   inline int SyncConsoleSize(void) {
+    const size_t before_width = console_width_;
+    const size_t before_height = console_height_;
     const int ret = GetConsoleSize(console_width_, console_height_);
-    InitializeScreenBuffer();
+    if (before_width != console_width_ || before_height != console_height_) {
+      InitializeScreenBuffer();
+    }
     return ret;
   }
 

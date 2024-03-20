@@ -10,7 +10,6 @@ namespace lotate_polyhedron {
 
 void ConsoleCoordinate::Draw(void) {
   SwapBuffer();
-  Clear();
   for (size_t i = 0; i < GetShapeCount(); ++i) {
     for (const auto& line : GetShapeAt(i)) {
       DrawLineOnBuffer(line);
