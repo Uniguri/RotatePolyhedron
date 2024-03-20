@@ -1,10 +1,13 @@
 # LotatePolyhedron
 Lotate polyhedron on linux console.
 
+# Demo
+[![Demo video](http://img.youtube.com/vi/Nl9Az6YDndc/0.jpg)](https://youtu.be/Nl9Az6YDndc)
+
 # Usage
 You can define polyhedron using std::vector like VBO and EBO.
 Then define shape with them and add it to ConsoleCoordinate object.
-Finally you can draw them!!
+And then you can draw them!!
 
 ## Example
 Full examples is in [main.cc](./src/main.cc).
@@ -26,9 +29,6 @@ while (1) {
   cc.LotateEveryShapeAroundZAxis(z);
 }
 ```
-
-# Demo
-[![Demo video](http://img.youtube.com/vi/Nl9Az6YDndc/0.jpg)](https://youtu.be/Nl9Az6YDndc)
 
 # Library
 - https://github.com/Uniguri/FixedPoint
