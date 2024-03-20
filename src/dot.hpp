@@ -11,7 +11,7 @@ namespace lotate_polyhedron {
 template <typename T>
 struct Dot {
   T x, y, z;
-  constexpr static T kPi{3.14159265359};
+  constexpr static T kPi = T(3.1415926535897932384626433832795);
 
   constexpr explicit Dot(void) : x(T()), y(T()), z(T()) {}
   constexpr explicit Dot(int32_t x, int32_t y, int32_t z)

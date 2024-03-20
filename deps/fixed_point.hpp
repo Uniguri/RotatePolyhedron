@@ -27,11 +27,21 @@ class FixedPoint {
   static const uint64_t kFractionMask = (1llu << kNumberOfFractionBits) - 1;
   static const uint64_t kConversionFactor = (1llu << kNumberOfFractionBits);
 
-  static constexpr FixedPoint kFixedPi{3.1415926535897932384626433832795};
+  static constexpr FixedPoint kPi{3.1415926535897932384626433832795};
 
   constexpr explicit FixedPoint(void) : value_(0) {}
 
+  constexpr explicit FixedPoint(int8_t value)
+      : FixedPoint(static_cast<int64_t>(value)) {}
+  constexpr explicit FixedPoint(uint8_t value)
+      : FixedPoint(static_cast<int64_t>(value)) {}
+  constexpr explicit FixedPoint(int16_t value)
+      : FixedPoint(static_cast<int64_t>(value)) {}
   constexpr explicit FixedPoint(int32_t value)
+      : FixedPoint(static_cast<int64_t>(value)) {}
+  constexpr explicit FixedPoint(uint32_t value)
+      : FixedPoint(static_cast<int64_t>(value)) {}
+  constexpr explicit FixedPoint(uint64_t value)
       : FixedPoint(static_cast<int64_t>(value)) {}
   constexpr explicit FixedPoint(int64_t value)
       : value_(value << kNumberOfFractionBits) {}
@@ -80,7 +90,15 @@ class FixedPoint {
     return static_cast<int32_t>(ToInt64());
   }
 
+  constexpr inline operator uint32_t() const {
+    return static_cast<uint32_t>(ToInt64());
+  }
+
   constexpr inline operator int64_t() const { return ToInt64(); }
+
+  constexpr inline operator uint64_t() const {
+    return static_cast<uint64_t>(ToInt64());
+  }
 
   constexpr inline operator float() const {
     return static_cast<float>(ToDouble());
@@ -162,9 +180,13 @@ class FixedPoint {
 #if FIXED_POINT_USE_FAST_OPERATION == 1
     value_ = (value_ << kNumberOfFractionBits) / rhs.value_;
 #else
-    const FixedPoint temp =
-        FromRawValue((1llu << (2 * kNumberOfFractionBits - 1)) / rhs.value_) *
-        (*this);
+    const int rhs_sign = rhs >= 0 ? 1 : -1;
+    const int64_t rhs_value = rhs_sign * rhs.value_;
+
+    constexpr uint64_t kDivisionMagicNumber =
+        1llu << (2 * kNumberOfFractionBits - 1);
+    const int64_t temp_int = rhs_sign * (kDivisionMagicNumber / rhs_value);
+    const FixedPoint& temp = FromRawValue(temp_int) * (*this);
     value_ = temp.value_ << 1;
 #endif
     return *this;
@@ -176,32 +198,32 @@ class FixedPoint {
 
   template <typename F>
   constexpr inline bool operator<(const F& rhs) const {
-    return value_ < FixedPoint(rhs);
+    return *this < FixedPoint(rhs);
   }
 
   template <typename F>
   constexpr inline bool operator<=(const F& rhs) const {
-    return value_ <= FixedPoint(rhs);
+    return *this <= FixedPoint(rhs);
   }
 
   template <typename F>
   constexpr inline bool operator>(const F& rhs) const {
-    return value_ > FixedPoint(rhs);
+    return *this > FixedPoint(rhs);
   }
 
   template <typename F>
   constexpr inline bool operator>=(const F& rhs) const {
-    return value_ >= FixedPoint(rhs);
+    return *this >= FixedPoint(rhs);
   }
 
   template <typename F>
   constexpr inline bool operator==(const F& rhs) const {
-    return value_ == FixedPoint(rhs);
+    return *this == FixedPoint(rhs);
   }
 
   template <typename F>
   constexpr inline bool operator!=(const F& rhs) const {
-    return value_ != FixedPoint(rhs);
+    return *this != FixedPoint(rhs);
   }
 
   template <typename F>
@@ -342,7 +364,7 @@ class FixedPoint {
   }
 
   constexpr inline static FixedPoint sin(const FixedPoint& fp) {
-    assert(-kFixedPi <= fp && fp <= kFixedPi);
+    assert(-kPi <= fp && fp <= kPi);
     constexpr int64_t fact3 = static_cast<int64_t>(utility::Factorial(3));
     constexpr int64_t fact5 = static_cast<int64_t>(utility::Factorial(5));
     constexpr int64_t fact7 = static_cast<int64_t>(utility::Factorial(7));
@@ -357,7 +379,7 @@ class FixedPoint {
   }
 
   constexpr inline static FixedPoint cos(const FixedPoint& fp) {
-    assert(-kFixedPi <= fp && fp <= kFixedPi);
+    assert(-kPi <= fp && fp <= kPi);
     constexpr int64_t fact2 = static_cast<int64_t>(utility::Factorial(2));
     constexpr int64_t fact4 = static_cast<int64_t>(utility::Factorial(4));
     constexpr int64_t fact6 = static_cast<int64_t>(utility::Factorial(6));
@@ -372,7 +394,7 @@ class FixedPoint {
   }
 
   constexpr inline static FixedPoint tan(const FixedPoint& fp) {
-    assert(-kFixedPi <= fp && fp <= kFixedPi);
+    assert(-kPi <= fp && fp <= kPi);
     const FixedPoint& sin = FixedPoint::sin(fp);
     const FixedPoint& cos = FixedPoint::cos(fp);
     assert(cos != FixedPoint(0));

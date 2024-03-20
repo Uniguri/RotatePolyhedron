@@ -45,6 +45,12 @@
     "streambuf": "cpp",
     "typeinfo": "cpp",
     "sstream": "cpp",
-    "cassert": "cpp"
+    "cassert": "cpp",
+    "chrono": "cpp",
+    "ctime": "cpp",
+    "ratio": "cpp",
+    "semaphore": "cpp",
+    "stop_token": "cpp",
+    "thread": "cpp"
   }
 }
