@@ -30,6 +30,9 @@ void ConsoleCoordinate::DrawLineOnBuffer(const LineType& line) {
 
   if (abs(dot1.x - dot2.x) < dx) {
     const size_t& x = round(dot1.x);
+    if (x < 0 || x >= GetConsoleWidth()) {
+      return;
+    }
     const FloatType& min_y = std::min(dot1.y, dot2.y);
     const FloatType& max_y = std::max(dot1.y, dot2.y);
     const FloatType& loop_start = std::max(min_y, FloatType(0));
@@ -43,13 +46,13 @@ void ConsoleCoordinate::DrawLineOnBuffer(const LineType& line) {
     const FloatType& min_x = std::min(dot1.x, dot2.x);
     const FloatType& max_x = std::max(dot1.x, dot2.x);
     const FloatType& loop_start = std::max(min_x, FloatType(0));
-    const FloatType& loop_end = std::max(max_x, FloatType(GetConsoleHeight()));
+    const FloatType& loop_end = std::min(max_x, FloatType(GetConsoleWidth()));
     for (FloatType x = loop_start; x < loop_end; x += dx) {
-      const FloatType& y = gradient * x + y_intercept;
+      const size_t& y = round(gradient * x + y_intercept);
       if (y < 0 || y >= GetConsoleHeight()) {
         continue;
       }
-      SetAt(round(x), round(y), '*');
+      SetAt(round(x), y, '*');
     }
   }
 }
