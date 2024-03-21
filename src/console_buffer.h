@@ -21,7 +21,7 @@ class ConsoleBuffer {
     return ret;
   }
 
-  inline void FastIO(void) {
+  inline static void FastIO(void) {
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
     std::cout.tie(nullptr);
@@ -29,7 +29,8 @@ class ConsoleBuffer {
 
   inline static int ClearScreen(void) { return system("clear"); }
 
-  explicit ConsoleBuffer(void) : current_buffer_(0) {
+  explicit ConsoleBuffer(void)
+      : current_buffer_(0), console_width_(0), console_height_(0) {
     SyncConsoleSize();
     InitializeScreenBuffer();
   }
@@ -90,6 +91,7 @@ class ConsoleBuffer {
     const size_t before_width = console_width_;
     const size_t before_height = console_height_;
     const int ret = GetConsoleSize(console_width_, console_height_);
+    --console_height_;
     if (before_width != console_width_ || before_height != console_height_) {
       InitializeScreenBuffer();
     }

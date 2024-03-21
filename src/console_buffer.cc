@@ -6,12 +6,16 @@
 namespace lotate_polyhedron {
 
 void ConsoleBuffer::Draw(void) const {
-  for (size_t y = 0; y < console_height_; ++y) {
+  for (size_t y = 0; y < console_height_ - 1; ++y) {
     for (size_t x = 0; x < console_width_; ++x) {
       std::wcout << screen_buffer_[current_buffer_][y][x];
     }
-    std::wcout << '\n';
+    std::wcout << L'\n';
   }
+  for (size_t x = 0; x < console_width_; ++x) {
+    std::wcout << screen_buffer_[current_buffer_][console_height_ - 1][x];
+  }
+  std::wcout << std::endl;
 }
 
 void ConsoleBuffer::Clear(void) {
