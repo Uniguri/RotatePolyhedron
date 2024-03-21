@@ -2,7 +2,7 @@
 Lotate polyhedron on linux console.
 
 # Demo
-[![Demo video](http://img.youtube.com/vi/Nl9Az6YDndc/0.jpg)](https://youtu.be/Nl9Az6YDndc)
+[![Demo video](http://img.youtube.com/vi/mM6hb5DCKQQ/0.jpg)](https://youtu.be/mM6hb5DCKQQ)
 
 # Usage
 You can define polyhedron using std::vector like VBO and EBO.
