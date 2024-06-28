@@ -1,5 +1,5 @@
-# LotatePolyhedron
-Lotate polyhedron on linux console.
+# RotatePolyhedron
+Rotate polyhedron on linux console.
 
 # Demo
 [![Demo video](http://img.youtube.com/vi/mM6hb5DCKQQ/0.jpg)](https://youtu.be/mM6hb5DCKQQ)
