@@ -1,0 +1,3 @@
+[submodule "FixedPoint"]
+	path = deps
+	url = https://github.com/Uniguri/FixedPoint.git
